@@ -1,0 +1,29 @@
+textarea {
+    font-family: monospace;
+    width: 100%;
+    height: 20em;
+}
+
+.left {
+    width: 49%;
+    float: left;
+}
+
+.right {
+    width: 49%;
+    float: right;
+}
+
+.program {
+    width: 30em;
+    overflow: auto;
+    font-family: monospace;
+}
+
+.program span {
+    padding: 0.2em 0.3em;
+}
+
+.program span.current {
+    background-color: yellow;
+}
