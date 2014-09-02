@@ -1,5 +1,6 @@
 var React = require('react');
 var Befunge = require('./befunge');
+var _ = require('lodash');
 
 var d = React.DOM;
 
@@ -23,6 +24,9 @@ var Main = React.createClass({
             b: this.state.b.reset(programString),
             prevStates: []
         });
+        if (_.isString(programString)) {
+            window.localStorage.setItem('storedProgram', programString);
+        }
     },
     run: function() {
         this.state.b.run();
@@ -61,26 +65,21 @@ var Main = React.createClass({
         });
     },
     render: function() {
-        var whatToShow;
-        if (this.state.b.state.get('running')) {
-            whatToShow = Program({
-                program: this.state.b.state.get('program'),
-                x: this.state.b.state.get('x'),
-                y: this.state.b.state.get('y')
-            });
-        } else {
-            whatToShow = Editor({
-                program: this.state.b.state.get('program'),
-                reset: this.reset
-            });
-        }
         return d.div(
             null,
             d.div(
                 null,
                 d.div(
                     { className: 'left' },
-                    whatToShow
+                    Editor({
+                        program: this.state.b.state.get('program'),
+                        reset: this.reset
+                    }),
+                    Program({
+                        program: this.state.b.state.get('program'),
+                        x: this.state.b.state.get('x'),
+                        y: this.state.b.state.get('y')
+                    })
                 ),
                 d.div(
                     { className: 'right' },
@@ -155,19 +154,10 @@ var Stats = React.createClass({
     render: function() {
         var s = this.props.programState;
         return d.div(
-            null,
+            { className: 'info' },
             d.div(
                 null,
-                'x: ',
-                s.get('x'),
-                ', y: ',
-                s.get('y'),
-                ', tick: ',
-                s.get('tick'),
-                ', width: ',
-                s.get('width'),
-                ', height: ',
-                s.get('height')
+                'x: ', s.get('x'),', y: ', s.get('y'),', tick: ', s.get('tick'),', width: ', s.get('width'),', height: ', s.get('height')
             )
         );
     }
@@ -176,8 +166,9 @@ var Stats = React.createClass({
 var Output = React.createClass({
     render: function() {
         return d.div(
-            null,
-            d.pre(null, this.props.outputString)
+            { className: 'output' },
+            d.h3(null, 'Output:'),
+            this.props.outputString
         );
     }
 });
@@ -200,7 +191,8 @@ var Program = React.createClass({
                                 className: (current ? 'current' : ''),
                                 key: 'cell-' + x
                             },
-                            cell
+                            // Replace spaces with non-breaking spaces
+                            (cell == ' ' ? '\u00a0' : cell)
                         );
                     })
                 );
