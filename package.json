@@ -8,13 +8,12 @@
         "immutable": "^2.0.6",
         "lodash": "^2.4.1",
         "react": "^0.11.1",
-        "uglifyify": "^2.5.0",
         "watchify": "^1.0.2"
     },
     "devDependencies": {},
     "scripts": {
         "watch": "watchify -dvo built.js web-runner.js",
-        "build": "browserify -g uglifyify -o built.js web-runner.js"
+        "build": "browserify -o built.js web-runner.js"
     },
     "author": "",
     "license": "ISC"
