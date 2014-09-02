@@ -151,14 +151,45 @@ var Controls = React.createClass({
 });
 
 var Stats = React.createClass({
+    getInitialState: function() {
+        return {
+            show: false
+        };
+    },
+    setShow: function(e) {
+        this.setState({
+            show: e.target.checked
+        });
+    },
     render: function() {
         var s = this.props.programState;
+        var info = null;
+        if (this.state.show) {
+            info = d.div(
+                { className: 'info' },
+                d.div(
+                    null,
+                    'x: ', s.get('x'),', y: ', s.get('y'),', tick: ', s.get('tick'),', width: ', s.get('width'),', height: ', s.get('height')
+                ),
+                d.div(
+                    null,
+                    'stack: ', s.get('_stack').get(0).toString().replace('Vector ', '')
+                )
+            );
+        }
         return d.div(
-            { className: 'info' },
-            d.div(
+            null,
+            d.label(
                 null,
-                'x: ', s.get('x'),', y: ', s.get('y'),', tick: ', s.get('tick'),', width: ', s.get('width'),', height: ', s.get('height')
-            )
+                d.input({
+                    type: 'checkbox',
+                    ref: 'show',
+                    value: this.state.show,
+                    onClick: this.setShow
+                }),
+                ' Show info'
+            ),
+            info
         );
     }
 });
