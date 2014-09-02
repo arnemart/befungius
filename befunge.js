@@ -54,9 +54,11 @@ var Befunge = function(programString, options) {
             return b;
         },
         step: function() {
-            b.state = interpret(b.state, settings);
-            if (settings.callback) {
-                settings.callback(b.state);
+            if (!b.state.get('terminated')) {
+                b.state = interpret(b.state, settings);
+                if (settings.callback) {
+                    settings.callback(b.state);
+                }
             }
             return b.state;
         },
