@@ -1,6 +1,7 @@
 #main {
     float: left;
     padding-bottom: 1em;
+    width: 100%;
 }
 
 textarea {
