@@ -398,7 +398,12 @@ function writeInstruction(state, instruction, x, y) {
         });
     }
     return state.updateIn(['program', y], function(v) {
-        return v.set(x, String.fromCharCode(instruction));
+        return v.withMutations(function(v) {
+            while (v.length < x) {
+                v.push(' ');
+            }
+            return v.set(x, String.fromCharCode(instruction));
+        });
     });
 }
 
