@@ -15,7 +15,7 @@ textarea {
 }
 
 .program {
-    width: 30em;
+    width: 100%;
     overflow: auto;
     font-family: monospace;
 }
