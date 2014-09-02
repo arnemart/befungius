@@ -7,7 +7,14 @@ var directions = ['>', 'v', '<', '^'];
 
 interpret.on(' ', function(state) {
     // Space: noop
-    return state.set('notick', true);
+    return state.withMutations(function(state) {
+        var newState = move(state);
+        while (getInstruction(newState) == ' ') {
+            newState = move(state);
+            state = newState;
+        }
+        return state.set('notick', true);
+    });
 
 }).on('z', function(state) {
     // Explicit noop
@@ -92,13 +99,14 @@ interpret.on(' ', function(state) {
 }).on('skip', function(state, settings, which) {
     // Continue skipmode
     // Skipmode should never tick
-    if (which == ';') {
-        return state.withMutations(function(state) {
-            return state.set('skipmode', false).set('notick', true);
-        });
-    } else {
-        return state.set('notick', true);
+    var newState = state;
+    while (getInstruction(newState) != ';') {
+        newState = move(state);
+        state = newState;
     }
+    return state.withMutations(function(state) {
+        return state.set('skipmode', false).set('notick', true);
+    });
 
 }).on('j', function(state) {
     // Skip several cells
