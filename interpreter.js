@@ -397,13 +397,17 @@ function writeInstruction(state, instruction, x, y) {
 
         });
     }
-    return state.updateIn(['program', y], function(v) {
-        return v.withMutations(function(v) {
-            while (v.length < x) {
-                v.push(' ');
-            }
-            return v.set(x, String.fromCharCode(instruction));
-        });
+    return state.withMutations(function(state) {
+        return state.updateIn(['program', y], function(v) {
+            return v.withMutations(function(v) {
+                while (v.length < x) {
+                    v.push(' ');
+                }
+                return v.set(x, String.fromCharCode(instruction));
+            });
+        }).set('width', state.get('program').reduce(function(longest, line) {
+            return Math.max(longest, line.length);
+        }, 0)).set('height', state.get('program').length);
     });
 }
 
