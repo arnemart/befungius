@@ -21,9 +21,21 @@ textarea {
 }
 
 .program span {
-    padding: 0.2em 0.3em;
+    display: inline-block;
+    width: 1em;
+    height: 100%;
+    text-align: center;
 }
 
 .program span.current {
     background-color: yellow;
+}
+
+.output {
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+.info {
+    font-family: monospace;
 }
