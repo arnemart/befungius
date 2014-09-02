@@ -1,3 +1,8 @@
+#main {
+    float: left;
+    padding-bottom: 1em;
+}
+
 textarea {
     font-family: monospace;
     width: 100%;
