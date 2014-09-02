@@ -220,12 +220,14 @@ interpret.on(' ', function(state) {
 }).on('string', function(state, settings, which) {
     // Continue stringmode
     if (which == '"') {
-        return state.set('stringmode', false);
-    } else if (which == ' ' && stack.top(state) == 32) {
+        return state.withMutations(function(stack) {
+            return stack.set('stringmode', false).set('currentStringLength', 0);
+        });
+    } else if (which == ' ' && stack.top(state) == 32 && state.get('currentStringLength') >= 1) {
         // Don't add duplicate spaces, and don't tick
         return state.set('notick', true);
     } else {
-        return stack.push(state, which.charCodeAt(0));
+        return stack.push(state, which.charCodeAt(0)).update('currentStringLength', function(n) { return n + 1; });;
     }
 
 }).on("'", function(inState) {

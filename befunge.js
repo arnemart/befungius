@@ -22,7 +22,8 @@ function initState(program) {
         returncode: 0,
         program: program,
         _stack: [[]],
-        outputString: ''
+        outputString: '',
+        currentStringLength: 0
     });
 }
 
