@@ -6,15 +6,17 @@ var Immutable = require('immutable');
 var directions = ['>', 'v', '<', '^'];
 
 interpret.on(' ', function(state) {
-    // Space: noop
+    // Space: tickless noop
     return state.withMutations(function(state) {
-        var newState = move(state);
-        while (getInstruction(newState) == ' ') {
-            newState = move(state);
-            state = newState;
+
+        state = move(state);
+        while (getInstruction(state) == ' ') {
+            state = move(state);
         }
+        state = move(state, -1);
         return state.set('notick', true);
     });
+
 
 }).on('z', function(state) {
     // Explicit noop
@@ -99,12 +101,10 @@ interpret.on(' ', function(state) {
 }).on('skip', function(state, settings, which) {
     // Continue skipmode
     // Skipmode should never tick
-    var newState = state;
-    while (getInstruction(newState) != ';') {
-        newState = move(state);
-        state = newState;
-    }
     return state.withMutations(function(state) {
+        while (getInstruction(state) != ';') {
+            state = move(state);
+        }
         return state.set('skipmode', false).set('notick', true);
     });
 
@@ -330,16 +330,19 @@ interpret.on(' ', function(state) {
 });
 
 
-function move(state) {
+function move(state, delta) {
+    if (delta === undefined) {
+        delta = 1;
+    }
     switch (state.get('direction')) {
     case '>':
         return state.update('x', function(oldX) {
-            return (oldX + 1) % state.get('width');
+            return (oldX + delta) % state.get('width');
         });
         break;
     case '<':
         return state.update('x', function(oldX) {
-            var newX = oldX - 1;
+            var newX = oldX - delta;
             if (newX < 0) {
                 return state.get('width') - 1;
             }
@@ -348,12 +351,12 @@ function move(state) {
         break;
     case 'v':
         return state.update('y', function(oldY) {
-            return (oldY + 1) % state.get('height');
+            return (oldY + delta) % state.get('height');
         });
         break;
     case '^':
         return state.update('y', function(oldY) {
-            var newY = oldY - 1;
+            var newY = oldY - delta;
             if (newY < 0) {
                 return state.get('height') - 1;
             }
