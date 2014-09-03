@@ -53,7 +53,7 @@ var Main = React.createClass({
         };
     },
     componentWillMount: function() {
-        var initialProgram = window.localStorage.getItem('storedProgram') || '0"!dlrow olleH">:#,_@';
+        var initialProgram = window.localStorage.getItem('storedProgram') || samples[0].code;
         var b = Befunge(initialProgram, {
             input: this.input,
             output: this.output,
@@ -95,6 +95,9 @@ var Main = React.createClass({
                     }),
                     Output({
                         outputString: this.state.b.state.get('outputString')
+                    }),
+                    SampleList({
+                        reset: this.reset
                     })
                 )
             )
@@ -252,5 +255,60 @@ var Editor = React.createClass({
     }
 });
 
+var samples = [
+    {
+        title: 'Hello world',
+        code: '0"!dlrow olleH">:#,_@'
+    },
+    {
+        title: 'Count and rewrite',
+        code: '>91+:9`v\n' +
+            'p   v  _v\n' +
+            '    >$0 v\n' +
+            '^ 01+*68<'
+    },
+    {
+        title: '"Quine"',
+        code: 'p>n00g1+00p00g00#;g:84*-!#v_\\55*00g*+00gp1+::0;'
+    },
+    {
+        title: 'Fizzbuzz',
+        code: '0> 1+:3%v\n' +
+            '>^  v%5:_:5% v\n' +
+            ',v.:_v     v0_0"zzub"v\n' +
+            '"v         #\n' +
+            '     >0"zzub"v\n' +
+            '"   v"fizz"<         <\n' +
+            '^<         $<>:#,_v\n' +
+            '    >      #^^#   <'
+    }
+];
+
+var SampleList = React.createClass({
+    handleChange: function(e) {
+        var i = parseInt(e.target.value);
+        if (i > -1) {
+            this.props.reset(samples[i].code);
+        }
+    },
+    render: function() {
+        return d.div(
+            null,
+            d.select(
+                { onChange: this.handleChange },
+                d.option({ value: -1 }, 'Load sample...'),
+                samples.map(function(sample, i) {
+                    return d.option(
+                        {
+                            key: i,
+                            value: i
+                        },
+                        sample.title
+                    );
+                })
+            )
+        );
+    }
+});
 
 React.renderComponent(Main(), document.getElementById('main'));
