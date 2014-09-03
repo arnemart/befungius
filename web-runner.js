@@ -95,9 +95,6 @@ var Main = React.createClass({
                     }),
                     Output({
                         outputString: this.state.b.state.get('outputString')
-                    }),
-                    SampleList({
-                        reset: this.reset
                     })
                 )
             )
@@ -148,7 +145,10 @@ var Controls = React.createClass({
                     d.option({ value: 500 }, '500 ms'),
                     d.option({ value: 1000 }, '1 s')
                 )
-            )
+            ),
+            SampleList({
+                reset: this.props.reset
+            })
         );
     }
 });
@@ -268,7 +268,11 @@ var samples = [
             '^ 01+*68<'
     },
     {
-        title: '"Quine"',
+        title: 'Quine',
+        code: ':0g:84*-!#@_,1+'
+    },
+    {
+        title: 'Weird recursive quine',
         code: 'p>n00g1+00p00g00#;g:84*-!#v_\\55*00g*+00gp1+::0;'
     },
     {
@@ -292,21 +296,21 @@ var SampleList = React.createClass({
         }
     },
     render: function() {
-        return d.div(
-            null,
-            d.select(
-                { onChange: this.handleChange },
-                d.option({ value: -1 }, 'Load sample...'),
-                samples.map(function(sample, i) {
-                    return d.option(
-                        {
-                            key: i,
-                            value: i
-                        },
-                        sample.title
-                    );
-                })
-            )
+        return d.select(
+            {
+                onChange: this.handleChange,
+                value: -1
+            },
+            d.option({ value: -1 }, 'Load sample...'),
+            samples.map(function(sample, i) {
+                return d.option(
+                    {
+                        key: i,
+                        value: i
+                    },
+                    sample.title
+                );
+            })
         );
     }
 });
