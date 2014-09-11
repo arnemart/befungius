@@ -10,9 +10,6 @@ module.exports = function() {
         }
     };
     mm.on = function(what, method) {
-        if (typeof method != 'function') {
-            method = function() { return method; };
-        }
         if (_.isArray(what)) {
             for (var i = 0; i < what.length; i++) {
                 methods[what[i]] = method;

@@ -168,9 +168,6 @@ interpret.on(' ', function(state) {
 }).on('_', function(state) {
     // East-west if
     return stack.pop(state, function(state, val) {
-        if (val === undefined) {
-            throw new Error('undefined val in if');
-        }
         return state.set('direction', (val == 0 ? '>' : '<'));
     });
 
@@ -201,7 +198,7 @@ interpret.on(' ', function(state) {
     return stack.push(state, parseInt(which, 16));
 
 }).on(['+', '-', '*'], function(state, settings, which) {
-    // Add, subtract, delete
+    // Add, subtract, multiply
     return stack.pop(state, function(state, val1, val2) {
         return stack.push(state, eval('(' + val2 + ')' + which + '(' + val1 + ')'));
     });
@@ -273,24 +270,6 @@ interpret.on(' ', function(state) {
 }).on('n', function(state) {
     // Clear stack
     return stack.clear(state);
-
-
-    /*
-     * Stack stack manipulation
-     */
-
-    // }).on('{', function(state) {
-    //     // Begin block
-    //     return stack.pop(state, function(state, count) {
-    //         return stack.pushStack(state, function(state) {
-    //         });
-    //     });
-    // }).on('}', function(state) {
-    //     // End block
-    //     return stack.pop(state, function(state, count) {
-    //         return stack.popStack(state, function(state) {
-    //         });
-    //     });
 
     /*
      * Funge-space storage
@@ -442,16 +421,12 @@ module.exports = function(inState, settings) {
     var state = move(inState);
     var instruction = getInstruction(state);
     var realInstruction = instruction;
-    // try {
+
     if (state.get('stringmode')) {
         instruction = 'string';
     } else if (state.get('skipmode')) {
         instruction = 'skip';
     }
-    return interpret(instruction, tick(state, instruction), settings, realInstruction);
 
-    // } catch (e) {
-    //     var m = e.toString();
-    //     throw new Error(m + ' (at ' + state.get('x') + ', ' + (state.get('y') + 1) + ')');
-    // }
+    return interpret(instruction, tick(state, instruction), settings, realInstruction);
 };
