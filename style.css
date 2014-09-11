@@ -34,7 +34,8 @@ textarea {
 }
 
 .program span.current {
-    background-color: yellow;
+    background-color: black;
+    color: white;
 }
 
 .output {
