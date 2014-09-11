@@ -74,11 +74,6 @@ var Main = React.createClass({
                     Editor({
                         program: this.state.b.state.get('program'),
                         reset: this.reset
-                    }),
-                    Program({
-                        program: this.state.b.state.get('program'),
-                        x: this.state.b.state.get('x'),
-                        y: this.state.b.state.get('y')
                     })
                 ),
                 d.div(
@@ -96,7 +91,12 @@ var Main = React.createClass({
                     Output({
                         outputString: this.state.b.state.get('outputString')
                     })
-                )
+                ),
+                Program({
+                    program: this.state.b.state.get('program'),
+                    x: this.state.b.state.get('x'),
+                    y: this.state.b.state.get('y')
+                })
             )
         );
     }
